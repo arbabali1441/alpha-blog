@@ -5,11 +5,12 @@ class SessionsController < ApplicationController
   end
 
   def create
-
+    #render 'new'
+    debugger
   end
 
   def destroy
 
   end
-  
+
 end
