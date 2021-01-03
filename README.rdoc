@@ -1,1 +1,9 @@
+Alpha-Blog App Created by Arbab Ali
+Ruby
+HTML
+Shell
+Scss
+Javascript
+Css
+Server Run Command $ rails s
 This is the repository for the first alpha-blog app of the Complete Ruby on Rails Developer Course
