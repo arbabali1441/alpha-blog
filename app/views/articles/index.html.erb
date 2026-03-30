@@ -1,8 +1,86 @@
-<h1 align="center">Listing all articles</h1>
-<div align="center">
-  <%= will_paginate %>
+<div class="mb-5">
+  <div class="row align-items-center g-4 mb-4">
+    <div class="col-lg-7">
+      <h1 class="display-4 fw-bold">Read, save, and discover better articles</h1>
+      <p class="lead text-muted">Search the archive, jump into distraction-free reader mode, and build a personal reading list.</p>
+    </div>
+    <div class="col-lg-5">
+      <div class="reader-shell p-4">
+        <%= form_tag search_articles_path, method: :get, class: "row g-2 align-items-end" do %>
+          <div class="col-12">
+            <label class="form-label">Search title, description, or tags</label>
+            <%= text_field_tag 'q[title_or_description_or_tags_name_cont]', params[:q] && params[:q][:title_or_description_or_tags_name_cont], class: "form-control", placeholder: "Try: productivity, ruby, reading" %>
+          </div>
+          <div class="col-sm-6">
+            <%= submit_tag "Search library", class: "btn btn-primary w-100" %>
+          </div>
+          <div class="col-sm-6">
+            <%= link_to "Clear filters", articles_path, class: "btn btn-outline-primary w-100" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-4">
+    <div class="col-md-8">
+      <h2 class="h3 fw-bold mb-1">Featured Articles</h2>
+      <p class="text-muted mb-0">Fresh writing from the community with bookmarks, likes, comments, and reading mode built in.</p>
+    </div>
+    <div class="col-md-4 text-end">
+      <% if logged_in? %>
+        <%= link_to "✏️ Write Article", new_article_path, class: "btn btn-primary btn-lg" %>
+      <% else %>
+        <%= link_to "Start Writing", signup_path, class: "btn btn-primary btn-lg" %>
+      <% end %>
+    </div>
+  </div>
 </div>
-<%= render 'article', obj: @articles %>
-<div align="center">
-  <%= will_paginate %>
+
+<!-- Articles List -->
+<div class="row">
+  <div class="col-lg-8">
+    <%= render 'article', obj: @articles %>
+  </div>
+  
+  <!-- Sidebar -->
+  <div class="col-lg-4">
+    <div class="card sticky-top" style="top: 20px;">
+      <div class="card-header">
+        <h5 class="mb-0">Trending Now</h5>
+      </div>
+      <div class="card-body">
+        <% @trending_articles.each do |article| %>
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="fw-bold"><%= link_to truncate(article.title, length: 45), article_path(article), class: "text-decoration-none" %></div>
+            <small class="text-muted d-block mt-1">
+              <%= pluralize(article.likes.count, "like") %> ·
+              <%= pluralize(article.bookmarks.count, "bookmark") %> ·
+              <%= pluralize(article.view_count || 0, "view") %>
+            </small>
+          </div>
+        <% end %>
+
+        <div class="pt-2">
+          <div class="d-flex justify-content-between mb-2">
+            <span>Total Articles</span>
+            <strong><%= Article.count %></strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Total Users</span>
+            <strong><%= User.count %></strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Total Categories</span>
+            <strong><%= Category.count %></strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-center mt-5">
+  <%= paginate @articles if @articles.respond_to?(:current_page) %>
 </div>

@@ -1,34 +1,174 @@
-<h2 align="center">Title: <%= @article.title %></h2>
-<div class="well col-xs-8 col-xs-offset-2">
-  <% if @article.user %>
-    <ul class="listing">
-      <div class="row center">
-        <div class="col-md-4 col-md-offset-4">
-          <li>Created by:</li>
-          <li><%= link_to gravatar_for(@article.user), user_path(@article.user) %></li>
-          <li class="article-title">
-            <%= link_to @article.user.username, user_path(@article.user) %>
-          </li>
-          <li><small>
-            <%= pluralize(@article.user.articles.count, "article") if @article.user.articles %>
-          </small></li>
+<div class="row justify-content-center g-4 mt-4">
+  <div class="col-xl-8 col-lg-9">
+    <article class="reader-shell">
+      <header class="article-header mb-4 pb-4 border-bottom">
+        <div class="d-flex flex-wrap justify-content-between gap-3 mb-3">
+          <div>
+            <h1 class="display-5 fw-bold mb-3"><%= @article.title %></h1>
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <% if @article.user %>
+                <%= link_to gravatar_for(@article.user, size: 50), user_path(@article.user), class: "text-decoration-none" %>
+                <div>
+                  <div class="fw-bold"><%= link_to @article.user.username, user_path(@article.user), class: "text-decoration-none" %></div>
+                  <small class="text-muted"><%= pluralize(@article.user.articles.count, "article") %></small>
+                </div>
+              <% end %>
+            </div>
+            <div class="text-muted small">
+              Published <%= @article.created_at.strftime("%B %d, %Y") %>
+              <% if @article.updated_at != @article.created_at %>
+                · Updated <%= @article.updated_at.strftime("%B %d, %Y") %>
+              <% end %>
+              · <%= pluralize(@article.reading_time_minutes, "minute") %> read
+            </div>
+          </div>
+          <div class="article-stats text-muted small">
+            <div><%= pluralize(@article.likes.count, "like") %></div>
+            <div><%= pluralize(@article.bookmarks.count, "bookmark") %></div>
+            <div><%= pluralize(@article.comments.count, "comment") %></div>
+            <div><%= pluralize(@article.view_count || 0, "view") %></div>
+          </div>
         </div>
+
+        <div class="article-actions d-flex gap-2 flex-wrap">
+          <%= link_to "Reader Mode", reader_article_path(@article), class: "btn btn-outline-primary" %>
+          <% if logged_in? %>
+            <% if @article.bookmarked_by?(current_user) %>
+              <%= button_to "Saved", bookmark_path(@article.bookmark_for(current_user)), method: :delete, class: "btn btn-success" %>
+            <% else %>
+              <%= button_to "Save for later", article_bookmarks_path(@article), class: "btn btn-primary" %>
+            <% end %>
+
+            <% if @article.liked_by?(current_user) %>
+              <%= button_to "Unlike", like_path(@article.like_for(current_user)), method: :delete, class: "btn btn-outline-primary" %>
+            <% else %>
+              <%= button_to "Like article", article_likes_path(@article), class: "btn btn-outline-primary" %>
+            <% end %>
+          <% end %>
+          <% if logged_in? && (current_user == @article.user || current_user.admin?) %>
+            <%= link_to "Edit Article", edit_article_path(@article), class: "btn btn-warning" %>
+            <%= link_to "Delete Article", article_path(@article), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
+          <% end %>
+          <%= link_to "Back to Articles", articles_path, class: "btn btn-outline-primary" %>
+        </div>
+      </header>
+
+      <% if @article.tag_list.any? || @article.categories.any? %>
+        <section class="mb-4">
+          <% @article.tag_list.each do |tag| %>
+            <span class="badge bg-light text-dark border me-2 mb-2">#<%= tag %></span>
+          <% end %>
+          <% @article.categories.each do |category| %>
+            <span class="badge bg-info me-2 mb-2"><%= category.name %></span>
+          <% end %>
+        </section>
+      <% end %>
+
+      <div class="article-body article-reading-body mb-5" data-highlight-root>
+        <%= simple_format(@article.description) %>
       </div>
-    </ul>
-  <% end %>
-  <h4 class="center description"><strong>Description:</strong></h4>
-  <hr>
-  <%= simple_format(@article.description) %>
-  <% if @article.categories.any? %>
-    <p>Categories: <%= render @article.categories %></p>
-  <% end %>
-  <div class="article-actions">
-    <% if logged_in? && (current_user == @article.user || current_user.admin?) %>
-      <%= link_to "Edit this article", edit_article_path(@article), class: "btn btn-xs btn-primary" %>
-     <%= link_to "Delete this article", article_path(@article), method: :delete, 
-                                        data: { confirm: "Are you sure you want to delete the article?"}, 
-                                        class: "btn btn-xs btn-danger" %>
-    <% end %>
-    <%= link_to "View all articles", articles_path, class: "btn btn-xs btn-success" %>
+
+      <% if logged_in? %>
+        <section class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h3 class="h5 fw-bold">Save a highlight</h3>
+            <p class="text-muted small">Select a passage in the article body, then save it to your personal highlights.</p>
+            <%= form_for [@article, @highlight], html: { class: "highlight-form" } do |f| %>
+              <%= f.hidden_field :content, class: "highlight-content-input" %>
+              <%= f.hidden_field :position, class: "highlight-position-input", value: 0 %>
+              <div class="highlight-preview text-muted mb-3">No text selected yet.</div>
+              <%= f.submit "Save highlight", class: "btn btn-primary", disabled: true, data: { highlight_submit: true } %>
+            <% end %>
+          </div>
+        </section>
+
+        <% if @article_highlights.any? %>
+          <section class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+              <h3 class="h5 fw-bold">Your highlights</h3>
+              <% @article_highlights.each do |highlight| %>
+                <div class="highlight-item">
+                  <blockquote class="mb-2">“<%= highlight.content %>”</blockquote>
+                  <div class="d-flex justify-content-between align-items-center small text-muted">
+                    <span>Saved <%= time_ago_in_words(highlight.created_at) %> ago</span>
+                    <%= button_to "Remove", highlight_path(highlight), method: :delete, class: "btn btn-sm btn-outline-primary" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+      <% end %>
+
+      <section class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="h5 fw-bold mb-0">Discussion</h3>
+            <span class="text-muted small"><%= pluralize(@article.comments.count, "comment") %></span>
+          </div>
+
+          <% if logged_in? %>
+            <%= form_for [@article, @comment] do |f| %>
+              <div class="form-group">
+                <%= f.text_area :content, rows: 4, class: "form-control", placeholder: "Share your thoughts on this article" %>
+              </div>
+              <%= f.submit "Post comment", class: "btn btn-primary" %>
+            <% end %>
+          <% else %>
+            <p class="text-muted">Log in to join the conversation.</p>
+          <% end %>
+
+          <hr>
+
+          <% if @article.comments.any? %>
+            <% @article.comments.order(created_at: :desc).each do |comment| %>
+              <div class="comment-item">
+                <div class="d-flex justify-content-between gap-3">
+                  <div>
+                    <div class="fw-bold"><%= comment.user.username %></div>
+                    <div class="text-muted small"><%= time_ago_in_words(comment.created_at) %> ago</div>
+                  </div>
+                  <% if logged_in? && (comment.user == current_user || current_user.admin?) %>
+                    <%= button_to "Delete", comment_path(comment), method: :delete, class: "btn btn-sm btn-outline-primary" %>
+                  <% end %>
+                </div>
+                <div class="mb-0 mt-2"><%= simple_format(comment.content) %></div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted mb-0">No comments yet. Start the conversation.</p>
+          <% end %>
+        </div>
+      </section>
+    </article>
+  </div>
+
+  <div class="col-xl-4 col-lg-3">
+    <div class="card sticky-top border-0 shadow-sm" style="top: 20px;">
+      <div class="card-body">
+        <h3 class="h5 fw-bold">Recommended next</h3>
+        <% @recommended_articles.each do |article| %>
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="fw-bold"><%= link_to truncate(article.title, length: 42), article_path(article), class: "text-decoration-none" %></div>
+            <small class="text-muted d-block mt-1">
+              <%= article.user.username %> · <%= pluralize(article.likes.count, "like") %> · <%= pluralize(article.view_count || 0, "view") %>
+            </small>
+          </div>
+        <% end %>
+
+        <h4 class="h6 fw-bold mt-4">More by <%= @article.user&.username %></h4>
+        <% if @article.user && @article.user.articles.count > 1 %>
+          <ul class="list-unstyled mb-0">
+            <% @article.user.articles.where.not(id: @article.id).limit(5).each do |article| %>
+              <li class="mb-2">
+                <%= link_to truncate(article.title, length: 34), article_path(article), class: "text-decoration-none" %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted mb-0">No other articles yet.</p>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

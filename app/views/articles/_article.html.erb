@@ -1,28 +1,71 @@
 <% obj.each do |article| %>
-  <div class="row">
-    <div class="col-xs-8 col-xs-offset-2">
-      <div class="well well-lg">
-        <div class="article-title">
-          <%= link_to article.title, article_path(article) %>
+  <div class="card article-card mb-4 shadow-sm border-0">
+    <div class="card-body">
+      <h3 class="card-title article-title mb-2">
+        <%= link_to article.title, article_path(article), class: "text-decoration-none" %>
+      </h3>
+
+      <div class="article-meta d-flex flex-wrap gap-3 mb-3 pb-3 border-bottom">
+        <div class="meta-item">
+          <i class="fas fa-user text-primary"></i>
+          <span class="ms-1"><%= article.user.username if article.user %></span>
         </div>
-        <div class="article-body">
-          <%= truncate(article.description, length: 100) %>
-          <div class="article-meta-details">
-             <small>Created by: <%= article.user.username if article.user %>,
-                    <%= time_ago_in_words(article.created_at) %> ago, 
-                    last updated: <%= time_ago_in_words(article.updated_at) %> ago</small>
-          </div>
+        <div class="meta-item">
+          <i class="fas fa-calendar text-primary"></i>
+          <span class="ms-1"><%= time_ago_in_words(article.created_at) %> ago</span>
+        </div>
+        <div class="meta-item">
+          <i class="fas fa-book-open text-primary"></i>
+          <span class="ms-1"><%= pluralize(article.reading_time_minutes, "min") %> read</span>
         </div>
         <% if article.categories.any? %>
-          <p>Categories: <%= render article.categories %></p>
-        <% end %>
-        <% if logged_in? && (current_user == article.user || current_user.admin?)%>
-          <div class="article-actions">
-            <%= link_to "Edit this article", edit_article_path(article), class: "btn btn-xs btn-primary" %>
-            <%= link_to "Delete this article", article_path(article), method: :delete, 
-                                          data: { confirm: "Are you sure you want to delete the article?"}, 
-                                          class: "btn btn-xs btn-danger" %>
+          <div class="meta-item">
+            <i class="fas fa-tags text-primary"></i>
+            <span class="ms-1"><%= article.categories.count %> category(ies)</span>
           </div>
+        <% end %>
+      </div>
+
+      <p class="article-excerpt">
+        <%= truncate(article.description, length: 150) %>
+      </p>
+
+      <% if article.categories.any? %>
+        <div class="mb-3">
+          <% article.categories.limit(3).each do |category| %>
+            <span class="badge bg-info me-2">
+              <i class="fas fa-folder-open"></i> <%= category.name %>
+            </span>
+          <% end %>
+          <% if article.categories.count > 3 %>
+            <span class="badge bg-secondary">+<%= article.categories.count - 3 %> more</span>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if article.tag_list.any? %>
+        <div class="mb-3">
+          <% article.tag_list.first(4).each do |tag| %>
+            <span class="badge bg-light text-dark border me-2">#<%= tag %></span>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="d-flex flex-wrap gap-3 small text-muted mb-3">
+        <span><%= pluralize(article.likes.count, "like") %></span>
+        <span><%= pluralize(article.bookmarks.count, "bookmark") %></span>
+        <span><%= pluralize(article.comments.count, "comment") %></span>
+        <span><%= pluralize(article.view_count || 0, "view") %></span>
+      </div>
+
+      <div class="article-actions gap-2 d-flex flex-wrap">
+        <%= link_to "Read More", article_path(article), class: "btn btn-primary btn-sm" %>
+        <%= link_to "Reader Mode", reader_article_path(article), class: "btn btn-outline-primary btn-sm" %>
+        
+        <% if logged_in? && (current_user == article.user || current_user.admin?) %>
+          <%= link_to "Edit", edit_article_path(article), class: "btn btn-warning btn-sm" %>
+          <%= link_to "Delete", article_path(article), method: :delete, 
+                data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
         <% end %>
       </div>
     </div>

@@ -1,0 +1,24 @@
+<section class="auth-shell">
+  <div class="auth-card">
+    <span class="eyebrow">Reset password</span>
+    <h1>Choose a new password</h1>
+    <p class="section-copy">Use a strong password you have not used before.</p>
+
+    <%= render 'shared/errors', obj: @user %>
+
+    <%= form_for(@user, url: password_reset_path(params[:id], email: params[:email]), html: { role: "form" }) do |f| %>
+      <div class="form-group">
+        <%= f.label :password, "New password" %>
+        <%= f.password_field :password, class: "form-control", placeholder: "Enter new password", autofocus: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirm password" %>
+        <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm new password" %>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <%= f.submit "Reset password", class: "btn btn-primary btn-lg" %>
+        <%= link_to "Back to log in", login_path, class: "btn btn-quiet btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</section>

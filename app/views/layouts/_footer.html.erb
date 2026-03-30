@@ -1,13 +1,34 @@
-<div class="container">
-  <footer class="footer">
-    <small>
-      Copyright &copy; <a href="https://github.com/arbabali1441/alpha-blog">The Complete Ruby on Rails Developer</a>
-      by <a href="http://www.github.com/arbabali1441">Arbab Ali</a>
-    </small>
-    <nav>
-      <ul>
-        <li><%= link_to "About", about_path %></li>
-      </ul>
-    </nav>
-  </footer>
-</div>
+<footer class="footer">
+  <div class="container layout-container py-5">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <h6 class="fw-bold mb-3">Alpha Blog</h6>
+        <p class="footer-copy">A quieter editorial platform for reading, saving, highlighting, and revisiting thoughtful writing without the usual feed clutter.</p>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h6 class="fw-bold mb-3">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><%= link_to "Articles", articles_path, class: "footer-link" %></li>
+          <% if logged_in? %>
+            <li><%= link_to "Reading List", reading_list_path, class: "footer-link" %></li>
+          <% end %>
+          <li><%= link_to "Categories", categories_path, class: "footer-link" %></li>
+          <li><%= link_to "About", about_path, class: "footer-link" %></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h6 class="fw-bold mb-3">Connect</h6>
+        <ul class="list-unstyled">
+          <li><a href="https://github.com/arbabali1441" class="footer-link" target="_blank">GitHub</a></li>
+          <li><a href="#" class="footer-link">Twitter</a></li>
+          <li><a href="#" class="footer-link">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright text-center py-3">
+      <small>
+        &copy; <%= Date.today.year %> Alpha Blog. Designed for slower, better reading.
+      </small>
+    </div>
+  </div>
+</footer>

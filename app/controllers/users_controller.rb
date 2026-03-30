@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :require_same_user, only: [:edit, :update, :destroy]
   before_action :require_admin, only: [:destroy]
   def index
-    @users = User.paginate(page: params[:page], per_page: 5)
+    @users = User.page(params[:page]).per(5)
   end
 
   def new
@@ -12,6 +12,8 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    return render('new') unless handle_avatar_upload(@user)
+
     if @user.save
       session[:user_id] = @user.id
       flash[:success] = "Welcome to the alpha blog #{@user.username}"
@@ -25,7 +27,10 @@ end
   end
 
   def update
-    if @user.update(user_params)
+    @user.assign_attributes(user_params)
+    return render('edit') unless handle_avatar_upload(@user)
+
+    if @user.save
       flash[:success] = "Your account was updated successfully"
       redirect_to articles_path
     else
@@ -34,7 +39,7 @@ end
   end
 
   def show
-    @user_articles = @user.articles.paginate(page: params[:page], per_page: 5)
+    @user_articles = @user.articles.page(params[:page]).per(5)
   end
 
   def destroy
@@ -50,6 +55,31 @@ end
   end
   def set_user
     @user = User.find(params[:id])
+  end
+
+  def handle_avatar_upload(user)
+    return true unless params[:user]
+
+    if params[:user][:remove_avatar] == '1'
+      user.avatar_data = nil
+    end
+
+    uploaded_avatar = params[:user][:avatar]
+    return true unless uploaded_avatar.present?
+
+    unless uploaded_avatar.content_type.to_s.start_with?('image/')
+      user.errors.add(:base, 'Profile image must be a valid image file')
+      return false
+    end
+
+    if uploaded_avatar.size.to_i > 2.megabytes
+      user.errors.add(:base, 'Profile image must be 2MB or smaller')
+      return false
+    end
+
+    encoded_image = Base64.strict_encode64(uploaded_avatar.read)
+    user.avatar_data = "data:#{uploaded_avatar.content_type};base64,#{encoded_image}"
+    true
   end
 
   def require_same_user

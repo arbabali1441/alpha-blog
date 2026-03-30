@@ -1,0 +1,23 @@
+databases:
+  - name: alpha-blog-db
+    databaseName: alpha_blog
+    plan: free
+
+services:
+  - type: web
+    name: alpha-blog
+    runtime: ruby
+    plan: free
+    buildCommand: bundle install && bundle exec rake assets:precompile && bundle exec rake db:migrate
+    startCommand: bundle exec rails server -b 0.0.0.0 -p $PORT -e production
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: alpha-blog-db
+          property: connectionString
+      - key: SECRET_KEY_BASE
+        generateValue: true

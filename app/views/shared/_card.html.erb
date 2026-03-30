@@ -1,0 +1,15 @@
+<div class="card mb-4">
+  <% if title.present? %>
+    <div class="card-header">
+      <h5 class="card-title mb-0"><%= title %></h5>
+    </div>
+  <% end %>
+  <div class="card-body">
+    <%= yield %>
+  </div>
+  <% if footer_content.present? %>
+    <div class="card-footer bg-light">
+      <%= footer_content %>
+    </div>
+  <% end %>
+</div>

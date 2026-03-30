@@ -1,9 +1,27 @@
 Rails.application.routes.draw do
-  
   root 'pages#home'
   get 'about', to: 'pages#about'
-  
-  resources :articles
+  get 'reading-list', to: 'bookmarks#index', as: :reading_list
+
+  resources :articles do
+    member do
+      get :reader
+    end
+
+    collection do
+      get :search
+    end
+
+    resources :bookmarks, only: [:create]
+    resources :likes, only: [:create]
+    resources :comments, only: [:create]
+    resources :highlights, only: [:create]
+  end
+
+  resources :bookmarks, only: [:index, :destroy]
+  resources :likes, only: [:destroy]
+  resources :comments, only: [:destroy]
+  resources :highlights, only: [:destroy]
 
   get 'signup', to: 'users#new'
   resources :users, except: [:new]
@@ -11,6 +29,7 @@ Rails.application.routes.draw do
   get 'login', to: 'sessions#new'
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
+  resources :password_resets, only: [:new, :create, :edit, :update]
 
   resources :categories, except: [:destroy]
   # The priority is based upon order of creation: first created -> highest priority.

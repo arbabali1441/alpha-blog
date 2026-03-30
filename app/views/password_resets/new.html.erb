@@ -1,0 +1,18 @@
+<section class="auth-shell">
+  <div class="auth-card">
+    <span class="eyebrow">Account recovery</span>
+    <h1>Forgot your password?</h1>
+    <p class="section-copy">Enter your email and we will generate a reset link for your account.</p>
+
+    <%= form_for(:password_reset, url: password_resets_path, html: { role: "form" }) do |f| %>
+      <div class="form-group">
+        <%= f.label :email %>
+        <%= f.email_field :email, class: "form-control", placeholder: "Enter your account email", autofocus: true %>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <%= f.submit "Send reset link", class: "btn btn-primary btn-lg" %>
+        <%= link_to "Back to log in", login_path, class: "btn btn-quiet btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</section>

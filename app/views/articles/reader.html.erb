@@ -1,0 +1,57 @@
+<div class="reader-mode py-5">
+  <div class="reader-page mx-auto">
+    <header class="reader-header text-center mb-5">
+      <p class="reader-kicker mb-3">Reader mode</p>
+      <h1 class="display-4 fw-bold mb-3"><%= @article.title %></h1>
+      <p class="text-muted mb-2">
+        <% if @article.user %>
+          <%= link_to @article.user.username, user_path(@article.user), class: "text-decoration-none" %>
+        <% end %>
+        · <%= @article.created_at.strftime("%B %d, %Y") %>
+        · <%= pluralize(@article.reading_time_minutes, "minute") %> read
+      </p>
+      <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <%= link_to "Standard view", article_path(@article), class: "btn btn-outline-primary" %>
+        <% if logged_in? %>
+          <% if @article.bookmarked_by?(current_user) %>
+            <%= button_to "Saved", bookmark_path(@article.bookmark_for(current_user)), method: :delete, class: "btn btn-success" %>
+          <% else %>
+            <%= button_to "Save for later", article_bookmarks_path(@article), class: "btn btn-primary" %>
+          <% end %>
+        <% end %>
+      </div>
+    </header>
+
+    <article class="reader-copy article-reading-body mb-5" data-highlight-root>
+      <%= simple_format(@article.description) %>
+    </article>
+
+    <% if logged_in? %>
+      <section class="reader-shell mb-4">
+        <h2 class="h5 fw-bold">Save a highlight</h2>
+        <p class="text-muted small">Select a passage from the article, then save it to your personal library.</p>
+        <%= form_for [@article, @highlight], html: { class: "highlight-form" } do |f| %>
+          <%= f.hidden_field :content, class: "highlight-content-input" %>
+          <%= f.hidden_field :position, class: "highlight-position-input", value: 0 %>
+          <div class="highlight-preview text-muted mb-3">No text selected yet.</div>
+          <%= f.submit "Save highlight", class: "btn btn-primary", disabled: true, data: { highlight_submit: true } %>
+        <% end %>
+      </section>
+
+      <% if @article_highlights.any? %>
+        <section class="reader-shell">
+          <h2 class="h5 fw-bold">Your saved highlights</h2>
+          <% @article_highlights.each do |highlight| %>
+            <div class="highlight-item">
+              <blockquote class="mb-2">“<%= highlight.content %>”</blockquote>
+              <div class="d-flex justify-content-between align-items-center small text-muted">
+                <span>Saved <%= time_ago_in_words(highlight.created_at) %> ago</span>
+                <%= button_to "Remove", highlight_path(highlight), method: :delete, class: "btn btn-sm btn-outline-primary" %>
+              </div>
+            </div>
+          <% end %>
+        </section>
+      <% end %>
+    <% end %>
+  </div>
+</div>

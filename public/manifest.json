@@ -1,0 +1,16 @@
+{
+  "name": "Alpha Blog",
+  "short_name": "Alpha",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3ea",
+  "theme_color": "#171717",
+  "description": "A quieter editorial platform for reading, saving, highlighting, and revisiting thoughtful writing.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

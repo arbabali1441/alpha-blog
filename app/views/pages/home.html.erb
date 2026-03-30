@@ -1,4 +1,217 @@
-<div class="center jumbotron">
-  <h1>ALPHA BLOG</h1>
-  <%= link_to "Sign up now", signup_path, class: "btn btn-danger btn-lg btn-xlarge" %>
-</div>
+<% featured_articles = Article.includes(:user, :categories, :likes, :bookmarks).order(created_at: :desc).limit(5) %>
+<% latest_articles = Article.includes(:user, :categories, :likes, :bookmarks).order(created_at: :desc).limit(6) %>
+<% trending_articles = Article.includes(:user, :likes, :bookmarks).to_a.sort_by { |article| [-(article.likes.size + article.bookmarks.size), -(article.view_count || 0), -(article.created_at.to_i)] }.first(4) %>
+
+<section class="home-hero mb-5">
+  <div class="row align-items-center g-5">
+    <div class="col-lg-7">
+      <span class="eyebrow">Save, read, return</span>
+      <h1 class="home-title">A calmer place to read the internet.</h1>
+      <p class="home-subtitle">Alpha Blog now feels closer to Instapaper and Medium: save pieces for later, switch into reader mode, highlight key passages, and discover what thoughtful readers are bookmarking right now.</p>
+      <div class="d-flex gap-3 flex-wrap">
+        <% if logged_in? %>
+          <%= link_to "Start writing", new_article_path, class: "btn btn-primary btn-lg" %>
+          <%= link_to "Open reading list", reading_list_path, class: "btn btn-quiet btn-lg" %>
+        <% else %>
+          <%= link_to "Create your account", signup_path, class: "btn btn-primary btn-lg" %>
+          <%= link_to "Browse the library", articles_path, class: "btn btn-quiet btn-lg" %>
+        <% end %>
+      </div>
+      <div class="hero-trust mt-4">
+        <span><strong><%= Article.count %></strong> stories</span>
+        <span><strong><%= User.count %></strong> readers</span>
+        <span><strong><%= Category.count %></strong> topics</span>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="hero-preview-card">
+        <div class="hero-preview-top">
+          <span class="eyebrow">Reader mode</span>
+          <span class="preview-dots"><i></i><i></i><i></i></span>
+        </div>
+        <% if featured_articles.first %>
+          <% article = featured_articles.first %>
+          <h2><%= article.title %></h2>
+          <p><%= truncate(article.description, length: 220) %></p>
+          <div class="preview-meta">
+            <span><%= article.user.username %></span>
+            <span><%= article.created_at.strftime("%b %d, %Y") %></span>
+            <span><%= pluralize(article.reading_time_minutes, "min") %></span>
+          </div>
+          <div class="preview-actions">
+            <%= link_to "Read article", article_path(article), class: "btn btn-primary" %>
+            <%= link_to "Reader view", reader_article_path(article), class: "btn btn-outline-primary" %>
+          </div>
+        <% else %>
+          <h2>Your next favorite read starts here.</h2>
+          <p>Publish a first article to unlock the new editorial homepage, reading list, and distraction-free reading experience.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="featured-carousel-section mb-5">
+  <div class="section-heading d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+    <div>
+      <span class="eyebrow">Featured shelf</span>
+      <h2 class="section-title mb-1">What readers are opening first</h2>
+      <p class="section-copy mb-0">A highlighted set of fresh pieces, designed like an editorial carousel instead of a plain list.</p>
+    </div>
+    <%= link_to "See all articles", articles_path, class: "section-link" %>
+  </div>
+
+  <div id="homeFeaturedCarousel" class="carousel slide editorial-carousel" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <% featured_articles.each_with_index do |article, index| %>
+        <div class="carousel-item <%= 'active' if index.zero? %>">
+          <div class="carousel-story">
+            <div class="carousel-story-copy">
+              <span class="eyebrow">Featured story</span>
+              <h3><%= article.title %></h3>
+              <p><%= truncate(article.description, length: 260) %></p>
+              <div class="preview-meta">
+                <span><%= article.user.username %></span>
+                <span><%= pluralize(article.likes.count, "like") %></span>
+                <span><%= pluralize(article.bookmarks.count, "save") %></span>
+              </div>
+              <div class="d-flex gap-2 flex-wrap">
+                <%= link_to "Open story", article_path(article), class: "btn btn-primary" %>
+                <%= link_to "Reader mode", reader_article_path(article), class: "btn btn-quiet" %>
+              </div>
+            </div>
+            <div class="carousel-story-aside">
+              <% if article.categories.any? %>
+                <div class="story-pills mb-3">
+                  <% article.categories.limit(2).each do |category| %>
+                    <span class="story-pill"><%= category.name %></span>
+                  <% end %>
+                </div>
+              <% end %>
+              <blockquote>“<%= truncate(article.description, length: 120) %>”</blockquote>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <% if featured_articles.size > 1 %>
+      <button class="carousel-control-prev" type="button" data-bs-target="#homeFeaturedCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#homeFeaturedCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    <% end %>
+  </div>
+</section>
+
+<section class="home-grid mb-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="section-heading mb-4">
+        <span class="eyebrow">Latest reads</span>
+        <h2 class="section-title mb-1">Fresh from the library</h2>
+        <p class="section-copy mb-0">New writing from your community with richer reading and discovery tools.</p>
+      </div>
+
+      <div class="row">
+        <% latest_articles.each do |article| %>
+          <div class="col-md-6 mb-4">
+            <article class="card h-100 article-card editorial-card">
+              <div class="card-body">
+                <div class="story-meta mb-3">
+                  <span><%= article.user&.username %></span>
+                  <span><%= article.created_at.strftime("%b %d") %></span>
+                  <span><%= pluralize(article.reading_time_minutes, "min") %></span>
+                </div>
+                <h3 class="h4 fw-bold mb-3">
+                  <%= link_to truncate(article.title, length: 56), article_path(article), class: "clean-link story-link" %>
+                </h3>
+                <p class="story-excerpt"><%= truncate(article.description, length: 150) %></p>
+                <div class="story-footer">
+                  <div class="story-stats">
+                    <span><%= pluralize(article.likes.count, "like") %></span>
+                    <span><%= pluralize(article.bookmarks.count, "save") %></span>
+                  </div>
+                  <%= link_to "Read", article_path(article), class: "section-link" %>
+                </div>
+              </div>
+            </article>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="sidebar-panel h-100">
+        <span class="eyebrow">Trending now</span>
+        <h3 class="h4 fw-bold mb-3">Popular with readers</h3>
+        <% trending_articles.each_with_index do |article, index| %>
+          <div class="trending-story">
+            <div class="trending-rank"><%= index + 1 %></div>
+            <div>
+              <div class="fw-bold mb-1"><%= link_to truncate(article.title, length: 42), article_path(article), class: "clean-link story-link" %></div>
+              <div class="small text-muted"><%= article.user.username %> · <%= pluralize(article.view_count || 0, "view") %></div>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="reader-tip">
+          <h4 class="h6 fw-bold">Why it feels better now</h4>
+          <ul class="feature-list">
+            <li>Reader mode removes distractions.</li>
+            <li>Bookmarks turn the app into a reading queue.</li>
+            <li>Highlights save important passages.</li>
+            <li>Likes and comments surface strong stories.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reading-benefits mb-5">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="benefit-card">
+        <span class="benefit-number">01</span>
+        <h3>Read later</h3>
+        <p>Build a personal reading list just like Instapaper, then return when you have time to focus.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="benefit-card">
+        <span class="benefit-number">02</span>
+        <h3>Read cleaner</h3>
+        <p>Open any article in reader mode to keep only the title, author, date, and story body.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="benefit-card">
+        <span class="benefit-number">03</span>
+        <h3>Read deeper</h3>
+        <p>Use highlights, tags, likes, and comments to keep track of ideas worth coming back to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-8">
+      <span class="eyebrow">Your library, upgraded</span>
+      <h2 class="section-title mb-2">Write something worth saving.</h2>
+      <p class="section-copy mb-0">Publish thoughtful pieces, then let readers bookmark, highlight, search, and return to them in a cleaner reading flow.</p>
+    </div>
+    <div class="col-lg-4 text-lg-end">
+      <% if logged_in? %>
+        <%= link_to "Create an article", new_article_path, class: "btn btn-primary btn-lg" %>
+      <% else %>
+        <%= link_to "Join Alpha Blog", signup_path, class: "btn btn-primary btn-lg" %>
+      <% end %>
+    </div>
+  </div>
+</section>

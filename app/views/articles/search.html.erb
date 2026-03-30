@@ -1,0 +1,50 @@
+<div class="mb-4">
+  <h1 class="display-5 fw-bold mb-2">Search Results</h1>
+  <p class="text-muted">
+    <%= pluralize(@articles.total_count, "article") %> found
+    <% if params[:q] && params[:q][:title_or_description_or_tags_name_cont].present? %>
+      for "<%= params[:q][:title_or_description_or_tags_name_cont] %>"
+    <% end %>
+  </p>
+</div>
+
+<div class="reader-shell mb-4">
+  <%= form_tag search_articles_path, method: :get, class: "row g-2" do %>
+    <div class="col-md-9">
+      <%= text_field_tag 'q[title_or_description_or_tags_name_cont]', params[:q] && params[:q][:title_or_description_or_tags_name_cont], class: "form-control", placeholder: "Search by title, description, or tag" %>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag "Search", class: "btn btn-primary w-100" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <% if @articles.any? %>
+      <%= render 'article', obj: @articles %>
+    <% else %>
+      <div class="reader-shell">
+        <p class="mb-0">No matching articles yet. Try a broader keyword or explore the full archive.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h2 class="h5 fw-bold">Trending articles</h2>
+        <% @trending_articles.each do |article| %>
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="fw-bold"><%= link_to truncate(article.title, length: 40), article_path(article), class: "text-decoration-none" %></div>
+            <small class="text-muted"><%= pluralize(article.likes.count, "like") %> · <%= pluralize(article.bookmarks.count, "bookmark") %></small>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+  <%= paginate @articles if @articles.respond_to?(:current_page) %>
+</div>
