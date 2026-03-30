@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.7.8'
+
 # Fix BigDecimal for Ruby 2.7+
 gem 'bigdecimal', '~> 1.3.5'
 
