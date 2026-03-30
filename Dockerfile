@@ -14,9 +14,9 @@ WORKDIR $APP_HOME
 
 COPY Gemfile Gemfile.lock .ruby-version ./
 
-RUN gem install bundler -v 2.2.33 && \
-    bundle _2.2.33_ config set without 'development test' && \
-    bundle _2.2.33_ install
+RUN gem install bundler -v 1.17.3 && \
+    bundle _1.17.3_ config set without 'development test' && \
+    bundle _1.17.3_ install
 
 COPY . .
 
