@@ -22,4 +22,6 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["bash", "-lc", "bundle exec rake db:migrate && bundle exec rails server -b 0.0.0.0 -p ${PORT:-3000} -e production"]
+RUN printf '#!/usr/bin/env bash\nset -e\n\necho \"Starting Alpha Blog...\"\necho \"Running database migrations...\"\nbundle exec rake db:migrate\necho \"Starting Rails server on port ${PORT:-3000}...\"\nexec bundle exec rails server -b 0.0.0.0 -p ${PORT:-3000} -e production\n' > /usr/local/bin/start-render && chmod +x /usr/local/bin/start-render
+
+CMD ["/usr/local/bin/start-render"]
