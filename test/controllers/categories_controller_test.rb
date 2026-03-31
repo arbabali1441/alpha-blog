@@ -18,11 +18,11 @@ class CategoriesControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get(:show, {'id' => @category.id})
+    get(:show, { 'id' => @category.id })
     assert_response :success
   end
 
-  test "should redirect create when admin not logged in" do 
+  test "should redirect create when admin not logged in" do
     assert_no_difference 'Category.count' do
       post :create, category: { name: "sports" }
     end
