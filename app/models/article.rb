@@ -31,7 +31,7 @@ class Article < ActiveRecord::Base
     scope = scope.where.not(id: excluded_article.id) if excluded_article
     scope = scope.where.not(user_id: user.id) if user
 
-    scope.includes(:likes, :bookmarks).to_a.sort_by do |article|
+    scope.includes(:user, :likes, :bookmarks).to_a.sort_by do |article|
       [-(article.likes.size + article.bookmarks.size), -(article.view_count || 0), -(article.created_at.to_i)]
     end.first(limit)
   end

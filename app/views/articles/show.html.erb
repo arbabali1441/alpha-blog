@@ -10,7 +10,7 @@
                 <%= link_to gravatar_for(@article.user, size: 50), user_path(@article.user), class: "text-decoration-none" %>
                 <div>
                   <div class="fw-bold"><%= link_to @article.user.username, user_path(@article.user), class: "text-decoration-none" %></div>
-                  <small class="text-muted"><%= pluralize(@article.user.articles.count, "article") %></small>
+                  <small class="text-muted"><%= pluralize(@article.user.articles.size, "article") %></small>
                 </div>
               <% end %>
             </div>
@@ -23,9 +23,9 @@
             </div>
           </div>
           <div class="article-stats text-muted small">
-            <div><%= pluralize(@article.likes.count, "like") %></div>
-            <div><%= pluralize(@article.bookmarks.count, "bookmark") %></div>
-            <div><%= pluralize(@article.comments.count, "comment") %></div>
+            <div><%= pluralize(@article.likes.size, "like") %></div>
+            <div><%= pluralize(@article.bookmarks.size, "bookmark") %></div>
+            <div><%= pluralize(@article.comments.size, "comment") %></div>
             <div><%= pluralize(@article.view_count || 0, "view") %></div>
           </div>
         </div>
@@ -104,7 +104,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="h5 fw-bold mb-0">Discussion</h3>
-            <span class="text-muted small"><%= pluralize(@article.comments.count, "comment") %></span>
+            <span class="text-muted small"><%= pluralize(@article.comments.size, "comment") %></span>
           </div>
 
           <% if logged_in? %>
@@ -121,7 +121,7 @@
           <hr>
 
           <% if @article.comments.any? %>
-            <% @article.comments.order(created_at: :desc).each do |comment| %>
+            <% @article.comments.sort_by(&:created_at).reverse_each do |comment| %>
               <div class="comment-item">
                 <div class="d-flex justify-content-between gap-3">
                   <div>
@@ -151,7 +151,7 @@
           <div class="mb-3 pb-3 border-bottom">
             <div class="fw-bold"><%= link_to truncate(article.title, length: 42), article_path(article), class: "text-decoration-none" %></div>
             <small class="text-muted d-block mt-1">
-              <%= article.user.username %> · <%= pluralize(article.likes.count, "like") %> · <%= pluralize(article.view_count || 0, "view") %>
+              <%= article.user.username %> · <%= pluralize(article.likes.size, "like") %> · <%= pluralize(article.view_count || 0, "view") %>
             </small>
           </div>
         <% end %>

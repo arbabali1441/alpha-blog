@@ -58,7 +58,7 @@ class ArticlesController < ApplicationController
   private
 
   def set_article
-    @article = Article.find(params[:id])
+    @article = Article.includes(:user, :categories, :likes, :bookmarks, comments: :user).find(params[:id])
   end
 
   def article_params

@@ -120,8 +120,8 @@
               <p><%= truncate(article.description, length: 260) %></p>
               <div class="preview-meta">
                 <span><%= article.user.username %></span>
-                <span><%= pluralize(article.likes.count, "like") %></span>
-                <span><%= pluralize(article.bookmarks.count, "save") %></span>
+                <span><%= pluralize(article.likes.size, "like") %></span>
+                <span><%= pluralize(article.bookmarks.size, "save") %></span>
               </div>
               <div class="d-flex gap-2 flex-wrap">
                 <%= link_to "Open story", article_path(article), class: "btn btn-primary" %>
@@ -129,7 +129,7 @@
               </div>
             </div>
             <div class="carousel-story-aside">
-              <% if article.categories.any? %>
+              <% if article.categories.loaded? ? article.categories.present? : article.categories.exists? %>
                 <div class="story-pills mb-3">
                   <% article.categories.limit(2).each do |category| %>
                     <span class="story-pill"><%= category.name %></span>
@@ -180,8 +180,8 @@
                 <p class="story-excerpt"><%= truncate(article.description, length: 150) %></p>
                 <div class="story-footer">
                   <div class="story-stats">
-                    <span><%= pluralize(article.likes.count, "like") %></span>
-                    <span><%= pluralize(article.bookmarks.count, "save") %></span>
+                    <span><%= pluralize(article.likes.size, "like") %></span>
+                    <span><%= pluralize(article.bookmarks.size, "save") %></span>
                   </div>
                   <%= link_to "Read", article_path(article), class: "section-link" %>
                 </div>
