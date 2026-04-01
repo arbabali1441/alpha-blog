@@ -19,4 +19,8 @@ class ApplicationController < ActionController::Base
       redirect_to root_path
     end
   end
+
+  def redirect_back(fallback_location:, **options)
+    redirect_to(request.referer.present? ? request.referer : fallback_location, options)
+  end
 end

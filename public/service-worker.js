@@ -3,7 +3,11 @@ var urlsToCache = [
   '/',
   '/articles',
   '/about',
-  '/offline.html'
+  '/offline.html',
+  '/manifest.json',
+  '/app-icon-192.png',
+  '/app-icon-512.png',
+  '/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', function(event) {
