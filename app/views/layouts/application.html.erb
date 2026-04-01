@@ -3,15 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Alpha Blog is an editorial reading platform for saving, discovering, and reading thoughtful articles in a clean, distraction-free interface.">
+  <meta name="description" content="<%= meta_description %>">
   <meta name="author" content="Arbab Ali">
   <meta name="theme-color" content="#171717">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Alpha Blog">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alpha Blog">
+  <meta property="og:title" content="<%= page_title %>">
+  <meta property="og:description" content="<%= meta_description %>">
+  <meta property="og:url" content="<%= request.original_url %>">
+  <meta property="og:image" content="<%= og_image %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= page_title %>">
+  <meta name="twitter:description" content="<%= meta_description %>">
+  <meta name="twitter:image" content="<%= og_image %>">
   
-  <title>Alpha Blog | Read Better</title>
+  <title><%= page_title %></title>
   
   <%= csrf_meta_tags %>
   
@@ -28,7 +38,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
 </head>
-<body class="<%= "#{controller_name}-#{action_name}" %>">
+<body class="<%= "#{controller_name}-#{action_name}" %> page-loading" data-theme="light">
   <!-- Navigation -->
   <%= render 'layouts/navigation' %>
   

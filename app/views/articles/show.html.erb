@@ -1,6 +1,9 @@
 <div class="row justify-content-center g-4 mt-4">
   <div class="col-xl-8 col-lg-9">
     <article class="reader-shell">
+      <div class="article-hero-cover mb-4">
+        <%= image_tag article_cover_data_uri(@article, width: 1280, height: 760), alt: "#{@article.title} cover", class: "article-hero-image" %>
+      </div>
       <header class="article-header mb-4 pb-4 border-bottom">
         <div class="d-flex flex-wrap justify-content-between gap-3 mb-3">
           <div>

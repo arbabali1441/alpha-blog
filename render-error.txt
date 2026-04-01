@@ -1,0 +1,100 @@
+2026-03-31 04:08:33  ** Execute db:load_config
+2026-03-31 04:08:34  ** Execute db:migrate
+2026-03-31 04:08:34  The PGconn, PGresult, and PGError constants are deprecated, and will be
+2026-03-31 04:08:34  removed as of version 1.0.
+2026-03-31 04:08:34  
+2026-03-31 04:08:34  You should use PG::Connection, PG::Result, and PG::Error instead, respectively.
+2026-03-31 04:08:34  
+2026-03-31 04:08:34  Called from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:240:in `load_dependency'
+2026-03-31 04:08:34    [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+2026-03-31 04:08:34  ** Invoke db:_dump (first_time)
+2026-03-31 04:08:34  ** Execute db:_dump
+2026-03-31 04:08:34  "Starting Rails server on port 10000..."
+2026-03-31 04:08:37  Array values in the parameter to `Gem.paths=` are deprecated.
+2026-03-31 04:08:37  Please use a String or nil.
+2026-03-31 04:08:37  An Array ({"GEM_PATH"=>["/usr/local/bundle"]}) was passed in from bin/rails:3:in `load'
+2026-03-31 04:08:47  /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:274:in `require': No such file to load -- test_helper (LoadError)
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:274:in `block in require'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:240:in `load_dependency'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:274:in `require'
+2026-03-31 04:08:47  	from /app/app/controllers/categories_controller_test.rb:1:in `<top (required)>'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:274:in `require'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:274:in `block in require'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:240:in `load_dependency'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:274:in `require'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:360:in `require_or_load'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:317:in `depend_on'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:233:in `require_dependency'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/engine.rb:472:in `block (2 levels) in eager_load!'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/engine.rb:471:in `each'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/engine.rb:471:in `block in eager_load!'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/engine.rb:469:in `each'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/engine.rb:469:in `eager_load!'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/engine.rb:346:in `eager_load!'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/application/finisher.rb:56:in `each'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/application/finisher.rb:56:in `block in <module:Finisher>'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/initializable.rb:30:in `instance_exec'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/initializable.rb:30:in `run'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/initializable.rb:55:in `block in run_initializers'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:228:in `block in tsort_each'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:350:in `block (2 levels) in each_strongly_connected_component'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:431:in `each_strongly_connected_component_from'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:349:in `block in each_strongly_connected_component'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:347:in `each'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:347:in `call'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:347:in `each_strongly_connected_component'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:226:in `tsort_each'
+2026-03-31 04:08:47  	from /usr/local/lib/ruby/2.7.0/tsort.rb:205:in `tsort_each'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/initializable.rb:54:in `run_initializers'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/application.rb:352:in `initialize!'
+2026-03-31 04:08:47  	from /app/config/environment.rb:5:in `<top (required)>'
+2026-03-31 04:08:47  	from /app/config.ru:3:in `require'
+2026-03-31 04:08:47  	from /app/config.ru:3:in `block in <main>'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/builder.rb:55:in `instance_eval'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/builder.rb:55:in `initialize'
+2026-03-31 04:08:47  	from /app/config.ru:in `new'
+2026-03-31 04:08:47  	from /app/config.ru:in `<main>'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/builder.rb:49:in `eval'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/builder.rb:49:in `new_from_string'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/builder.rb:40:in `parse_file'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/server.rb:300:in `build_app_and_options_from_config'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/server.rb:209:in `app'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/commands/server.rb:61:in `app'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/server.rb:337:in `wrapped_app'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/rack-1.6.13/lib/rack/server.rb:273:in `start'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/commands/server.rb:80:in `start'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/commands/commands_tasks.rb:80:in `block in server'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/commands/commands_tasks.rb:75:in `tap'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/commands/commands_tasks.rb:75:in `server'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/commands/commands_tasks.rb:39:in `run_command!'
+2026-03-31 04:08:47  	from /usr/local/bundle/gems/railties-4.2.10/lib/rails/commands.rb:17:in `<top (required)>'
+2026-03-31 04:08:47  	from bin/rails:8:in `require'
+2026-03-31 04:08:47  	from bin/rails:8:in `<main>'
+2026-03-31 04:08:47  => Booting WEBrick
+2026-03-31 04:08:47  => Rails 4.2.10 application starting in production on http://0.0.0.0:10000
+2026-03-31 04:08:47  => Run `rails server -h` for more startup options
+2026-03-31 04:08:47  => Ctrl-C to shutdown server
+2026-03-31 04:08:47  Exiting
+2026-03-31 04:08:47  "Starting Alpha Blog..."
+2026-03-31 04:08:47  "Running database migrations..."
+2026-03-31 04:08:48  [0;31m[1m==> Exited with status 1[0m
+2026-03-31 04:08:48  [0;34m[1m==> [0m[1mCommon ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys[0m
+2026-03-31 04:08:56  ** Invoke db:migrate (first_time)
+2026-03-31 04:08:56  ** Invoke environment (first_time)
+2026-03-31 04:08:56  ** Execute environment
+2026-03-31 04:08:58  ** Invoke db:load_config (first_time)
+2026-03-31 04:08:58  ** Execute db:load_config
+2026-03-31 04:08:59  ** Execute db:migrate
+2026-03-31 04:08:59  The PGconn, PGresult, and PGError constants are deprecated, and will be
+2026-03-31 04:08:59  removed as of version 1.0.
+2026-03-31 04:08:59  
+2026-03-31 04:08:59  You should use PG::Connection, PG::Result, and PG::Error instead, respectively.
+2026-03-31 04:08:59  
+2026-03-31 04:08:59  Called from /usr/local/bundle/gems/activesupport-4.2.10/lib/active_support/dependencies.rb:240:in `load_dependency'
+2026-03-31 04:08:59    [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+2026-03-31 04:08:59  ** Invoke db:_dump (first_time)
+2026-03-31 04:08:59  ** Execute db:_dump
+2026-03-31 04:08:59  "Starting Rails server on port 10000..."
+2026-03-31 04:09:02  Array values in the parameter to `Gem.paths=` are deprecated.
+2026-03-31 04:09:02  Please use a String or nil.
+2026-03-31 04:09:02  An Array ({"GEM_PATH"=>["/usr/local/bundle"]}) was passed in from bin/rails:3:in `load'

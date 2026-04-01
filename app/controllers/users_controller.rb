@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :require_same_user, only: [:edit, :update, :destroy]
   before_action :require_admin, only: [:destroy]
   def index
-    @users = User.page(params[:page]).per(5)
+    @users = User.includes(:articles, :bookmarks, :highlights).page(params[:page]).per(5)
   end
 
   def new
@@ -39,7 +39,7 @@ end
   end
 
   def show
-    @user_articles = @user.articles.page(params[:page]).per(5)
+    @user_articles = @user.articles.includes(:user, :categories, :likes, :bookmarks, :comments).page(params[:page]).per(5)
   end
 
   def destroy

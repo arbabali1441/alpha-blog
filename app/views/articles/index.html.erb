@@ -1,11 +1,15 @@
+<% featured_article = @articles.first %>
+<% grid_articles = @articles.offset_value.to_i.zero? ? @articles.drop(1) : @articles.to_a %>
+
 <div class="mb-5">
-  <div class="row align-items-center g-4 mb-4">
-    <div class="col-lg-7">
-      <h1 class="display-4 fw-bold">Read, save, and discover better articles</h1>
-      <p class="lead text-muted">Search the archive, jump into distraction-free reader mode, and build a personal reading list.</p>
+  <div class="row align-items-center g-4 mb-5">
+    <div class="col-lg-8">
+      <span class="eyebrow">Editorial library</span>
+      <h1 class="display-4 fw-bold archive-title">Read, save, and discover better articles</h1>
+      <p class="lead archive-copy">A calmer archive inspired by Medium and Instapaper: rich article covers, reader mode, highlights, and a personal reading list that feels intentional.</p>
     </div>
-    <div class="col-lg-5">
-      <div class="reader-shell p-4">
+    <div class="col-lg-4">
+      <div class="reader-shell archive-search-panel p-4 skeleton-surface">
         <%= form_tag search_articles_path, method: :get, class: "row g-2 align-items-end" do %>
           <div class="col-12">
             <label class="form-label">Search title, description, or tags</label>
@@ -22,14 +26,33 @@
     </div>
   </div>
 
+  <div class="archive-stat-row mb-5">
+    <div class="archive-stat-card skeleton-surface">
+      <span>Stories</span>
+      <strong><%= Article.count %></strong>
+    </div>
+    <div class="archive-stat-card skeleton-surface">
+      <span>Readers</span>
+      <strong><%= User.count %></strong>
+    </div>
+    <div class="archive-stat-card skeleton-surface">
+      <span>Topics</span>
+      <strong><%= Category.count %></strong>
+    </div>
+    <div class="archive-stat-card skeleton-surface">
+      <span>Reader mode</span>
+      <strong>Built in</strong>
+    </div>
+  </div>
+
   <div class="row align-items-center mb-4">
     <div class="col-md-8">
       <h2 class="h3 fw-bold mb-1">Featured Articles</h2>
-      <p class="text-muted mb-0">Fresh writing from the community with bookmarks, likes, comments, and reading mode built in.</p>
+      <p class="text-muted mb-0">Fresh writing from the community with strong covers, clean reading, and save-for-later habits.</p>
     </div>
     <div class="col-md-4 text-end">
       <% if logged_in? %>
-        <%= link_to "✏️ Write Article", new_article_path, class: "btn btn-primary btn-lg" %>
+        <%= link_to "Write Article", new_article_path, class: "btn btn-primary btn-lg" %>
       <% else %>
         <%= link_to "Start Writing", signup_path, class: "btn btn-primary btn-lg" %>
       <% end %>
@@ -37,43 +60,64 @@
   </div>
 </div>
 
-<!-- Articles List -->
 <div class="row">
   <div class="col-lg-8">
-    <%= render 'article', obj: @articles %>
+    <% if featured_article && @articles.offset_value.to_i.zero? %>
+      <article class="archive-feature-card mb-4 skeleton-surface">
+        <div class="archive-feature-media">
+          <%= image_tag article_cover_data_uri(featured_article, width: 1280, height: 760), alt: "#{featured_article.title} cover", class: "archive-feature-image" %>
+        </div>
+        <div class="archive-feature-copy">
+          <span class="eyebrow">Featured story</span>
+          <h2><%= link_to featured_article.title, article_path(featured_article), class: "clean-link story-link" %></h2>
+          <p><%= truncate(featured_article.description, length: 250) %></p>
+          <div class="article-stats-row mb-3">
+            <span><%= featured_article.user&.username %></span>
+            <span><%= pluralize(featured_article.likes.size, "like") %></span>
+            <span><%= pluralize(featured_article.bookmarks.size, "save") %></span>
+            <span><%= pluralize(featured_article.reading_time_minutes, "min") %></span>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <%= link_to "Read article", article_path(featured_article), class: "btn btn-primary" %>
+            <%= link_to "Reader mode", reader_article_path(featured_article), class: "btn btn-outline-primary" %>
+          </div>
+        </div>
+      </article>
+    <% end %>
+
+    <div class="article-card-grid">
+      <%= render 'article', obj: grid_articles %>
+    </div>
   </div>
   
-  <!-- Sidebar -->
   <div class="col-lg-4">
-    <div class="card sticky-top" style="top: 20px;">
-      <div class="card-header">
-        <h5 class="mb-0">Trending Now</h5>
-      </div>
-      <div class="card-body">
+    <div class="sidebar-panel sticky-top skeleton-surface" style="top: 20px;">
+      <div class="sidebar-stack">
+        <div>
+          <span class="eyebrow">Trending now</span>
+          <h5 class="mb-3">Stories getting opened and saved</h5>
+        </div>
         <% @trending_articles.each do |article| %>
-          <div class="mb-3 pb-3 border-bottom">
-            <div class="fw-bold"><%= link_to truncate(article.title, length: 45), article_path(article), class: "text-decoration-none" %></div>
-            <small class="text-muted d-block mt-1">
-              <%= pluralize(article.likes.count, "like") %> ·
-              <%= pluralize(article.bookmarks.count, "bookmark") %> ·
+          <div class="trending-story">
+            <div class="trending-rank"><%= @trending_articles.index(article) + 1 %></div>
+            <div>
+              <div class="fw-bold"><%= link_to truncate(article.title, length: 45), article_path(article), class: "clean-link story-link" %></div>
+              <small class="text-muted d-block mt-1">
+              <%= pluralize(article.likes.size, "like") %> ·
+              <%= pluralize(article.bookmarks.size, "bookmark") %> ·
               <%= pluralize(article.view_count || 0, "view") %>
-            </small>
+              </small>
+            </div>
           </div>
         <% end %>
 
-        <div class="pt-2">
-          <div class="d-flex justify-content-between mb-2">
-            <span>Total Articles</span>
-            <strong><%= Article.count %></strong>
-          </div>
-          <div class="d-flex justify-content-between mb-2">
-            <span>Total Users</span>
-            <strong><%= User.count %></strong>
-          </div>
-          <div class="d-flex justify-content-between">
-            <span>Total Categories</span>
-            <strong><%= Category.count %></strong>
-          </div>
+        <div class="reader-tip">
+          <h6 class="fw-bold">Why Alpha Blog feels professional</h6>
+          <ul class="feature-list">
+            <li>Reader mode for focused reading.</li>
+            <li>Save-for-later and highlights for Instapaper habits.</li>
+            <li>Thoughtful discussion and author identity like Medium.</li>
+          </ul>
         </div>
       </div>
     </div>

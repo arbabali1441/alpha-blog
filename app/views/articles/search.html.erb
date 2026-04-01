@@ -1,4 +1,5 @@
 <div class="mb-4">
+  <span class="eyebrow">Search</span>
   <h1 class="display-5 fw-bold mb-2">Search Results</h1>
   <p class="text-muted">
     <%= pluralize(@articles.total_count, "article") %> found
@@ -8,7 +9,7 @@
   </p>
 </div>
 
-<div class="reader-shell mb-4">
+<div class="reader-shell mb-4 skeleton-surface">
   <%= form_tag search_articles_path, method: :get, class: "row g-2" do %>
     <div class="col-md-9">
       <%= text_field_tag 'q[title_or_description_or_tags_name_cont]', params[:q] && params[:q][:title_or_description_or_tags_name_cont], class: "form-control", placeholder: "Search by title, description, or tag" %>
@@ -22,22 +23,27 @@
 <div class="row">
   <div class="col-lg-8">
     <% if @articles.any? %>
-      <%= render 'article', obj: @articles %>
+      <div class="article-card-grid">
+        <%= render 'article', obj: @articles %>
+      </div>
     <% else %>
-      <div class="reader-shell">
+      <div class="reader-shell skeleton-surface">
         <p class="mb-0">No matching articles yet. Try a broader keyword or explore the full archive.</p>
       </div>
     <% end %>
   </div>
 
   <div class="col-lg-4">
-    <div class="card border-0 shadow-sm">
-      <div class="card-body">
+    <div class="sidebar-panel skeleton-surface">
+      <div class="sidebar-stack">
         <h2 class="h5 fw-bold">Trending articles</h2>
         <% @trending_articles.each do |article| %>
-          <div class="mb-3 pb-3 border-bottom">
-            <div class="fw-bold"><%= link_to truncate(article.title, length: 40), article_path(article), class: "text-decoration-none" %></div>
-            <small class="text-muted"><%= pluralize(article.likes.count, "like") %> · <%= pluralize(article.bookmarks.count, "bookmark") %></small>
+          <div class="trending-story">
+            <div class="trending-rank"><%= @trending_articles.index(article) + 1 %></div>
+            <div>
+              <div class="fw-bold"><%= link_to truncate(article.title, length: 40), article_path(article), class: "clean-link story-link" %></div>
+              <small class="text-muted"><%= pluralize(article.likes.size, "like") %> · <%= pluralize(article.bookmarks.size, "bookmark") %></small>
+            </div>
           </div>
         <% end %>
       </div>

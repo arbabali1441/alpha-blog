@@ -1,6 +1,9 @@
 <div class="reader-mode py-5">
   <div class="reader-page mx-auto">
     <header class="reader-header text-center mb-5">
+      <div class="article-hero-cover reader-hero-cover mb-4">
+        <%= image_tag article_cover_data_uri(@article, width: 1280, height: 720), alt: "#{@article.title} cover", class: "article-hero-image" %>
+      </div>
       <p class="reader-kicker mb-3">Reader mode</p>
       <h1 class="display-4 fw-bold mb-3"><%= @article.title %></h1>
       <p class="text-muted mb-2">

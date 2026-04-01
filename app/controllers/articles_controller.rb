@@ -67,7 +67,7 @@ class ArticlesController < ApplicationController
 
   def load_article_index
     @q = Article.includes(:user, :categories, :tags).recent_first.ransack(params[:q])
-    @articles = @q.result(distinct: true).page(params[:page]).per(5)
+    @articles = @q.result(distinct: true).includes(:likes, :bookmarks, :comments).page(params[:page]).per(5)
     @trending_articles = Article.trending(5)
   end
 

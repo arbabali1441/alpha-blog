@@ -1,19 +1,25 @@
-<section class="page-intro text-center">
-  <span class="eyebrow">Profile</span>
-  <h1><%= @user.username %></h1>
-  <p class="section-copy">A personal page for published articles, saved reads, and community presence.</p>
-</section>
-
-<div class="row justify-content-center mb-4">
-  <div class="col-md-4 text-center">
-    <%= gravatar_for @user, size: 150 %>
-    <% if logged_in? && current_user == @user %>
-      <div class="mt-3">
-        <%= link_to "Update profile photo", edit_user_path(@user), class: "btn btn-quiet btn-sm" %>
+<section class="page-intro">
+  <div class="panel-card user-spotlight">
+    <div class="text-center">
+      <%= gravatar_for @user, size: 150 %>
+      <% if logged_in? && current_user == @user %>
+        <div class="mt-3">
+          <%= link_to "Update profile photo", edit_user_path(@user), class: "btn btn-quiet btn-sm" %>
+        </div>
+      <% end %>
+    </div>
+    <div>
+      <span class="eyebrow">Profile</span>
+      <h1><%= @user.username %></h1>
+      <p class="section-copy mb-3">A personal page for published articles, saved reads, and community presence.</p>
+      <div class="article-stats-row mb-0">
+        <span><%= pluralize(@user.articles.size, "article") %></span>
+        <span><%= pluralize(@user.bookmarks.size, "bookmark") %></span>
+        <span><%= pluralize(@user.highlights.size, "highlight") %></span>
       </div>
-    <% end %>
+    </div>
   </div>
-</div>
+</section>
 
 <div class="text-center mb-3">
   <h2 class="h4"><%= @user.username %>'s articles</h2>

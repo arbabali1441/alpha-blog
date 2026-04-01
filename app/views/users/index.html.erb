@@ -12,9 +12,9 @@
   <% @users.each do |user| %>
     <div class="col-md-6 col-lg-4 mb-4">
       <div class="panel-card text-center h-100">
-        <div class="mb-3"><%= link_to gravatar_for(user), user_path(user), class: "clean-link" %></div>
+        <div class="mb-3"><%= link_to gravatar_for(user, size: 96), user_path(user), class: "clean-link" %></div>
         <h2 class="h4 mb-2"><%= link_to user.username, user_path(user), class: "clean-link story-link" %></h2>
-        <p class="small text-muted mb-3"><%= pluralize(user.articles.count, "article") if user.articles %></p>
+        <p class="small text-muted mb-3"><%= pluralize(user.articles.size, "article") if user.articles %></p>
         <% if logged_in? && current_user.admin? %>
           <%= link_to "Delete user", user_path(user), method: :delete, data: { confirm: "Are you sure you want to delete the user and all their articles?" }, class: "btn btn-sm btn-quiet" %>
         <% end %>
