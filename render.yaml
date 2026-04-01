@@ -5,11 +5,11 @@ databases:
 
 services:
   - type: web
-    name: alpha-blog
-    runtime: ruby
+    name: alpha-blog-web
+    runtime: docker
     plan: free
-    buildCommand: bundle install && bundle exec rake assets:precompile && bundle exec rake db:migrate
-    startCommand: bundle exec rails server -b 0.0.0.0 -p $PORT -e production
+    dockerfilePath: ./Dockerfile
+    autoDeployTrigger: commit
     envVars:
       - key: RAILS_ENV
         value: production
