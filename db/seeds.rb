@@ -26,8 +26,8 @@ category_names = [
   "Technology"
 ]
 
-categories = category_names.index_with do |name|
-  Category.find_or_create_by!(name: name)
+categories = category_names.each_with_object({}) do |name, memo|
+  memo[name] = Category.find_or_create_by!(name: name)
 end
 
 stories = [
@@ -44,7 +44,7 @@ stories = [
     tags: "reader mode, typography, calm ui"
   },
   {
-    title: "Designing a Homepage That Feels More Like a Magazine",
+    title: "Designing a Homepage That Feels Like a Magazine",
     description: "Great editorial products use rhythm, hierarchy, and restraint. Here is a practical look at featured shelves, trending clusters, and visual pacing for a modern article platform.",
     category_names: ["Design", "Writing"],
     tags: "editorial design, homepage, layout"
