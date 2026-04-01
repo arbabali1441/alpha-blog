@@ -5,6 +5,10 @@
 <section class="home-hero mb-5">
   <div class="row align-items-center g-5">
     <div class="col-lg-7">
+      <div class="hero-kicker-wrap">
+        <span class="hero-kicker">Editorial reading platform</span>
+        <span class="hero-kicker hero-kicker-soft">Built for quieter browsing</span>
+      </div>
       <span class="eyebrow">Save, read, return</span>
       <h1 class="home-title">A calmer place to read the internet.</h1>
       <p class="home-subtitle">Alpha Blog now feels closer to Instapaper and Medium: save pieces for later, switch into reader mode, highlight key passages, and discover what thoughtful readers are bookmarking right now.</p>
@@ -21,6 +25,16 @@
         <span><strong><%= Article.count %></strong> stories</span>
         <span><strong><%= User.count %></strong> readers</span>
         <span><strong><%= Category.count %></strong> topics</span>
+      </div>
+      <div class="hero-feature-strip">
+        <div class="hero-feature-tile">
+          <span class="hero-feature-label">Reader view</span>
+          <strong>Distraction-free layouts for slower reading sessions.</strong>
+        </div>
+        <div class="hero-feature-tile">
+          <span class="hero-feature-label">Reading queue</span>
+          <strong>Bookmarks, highlights, and search that feel organized.</strong>
+        </div>
       </div>
     </div>
 
@@ -49,6 +63,19 @@
         <% end %>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="home-marquee mb-5">
+  <div class="marquee-shell">
+    <span>Reader mode</span>
+    <span>Editorial shelves</span>
+    <span>Thoughtful comments</span>
+    <span>Personal library</span>
+    <span>Quiet discovery</span>
+    <span>Reader mode</span>
+    <span>Editorial shelves</span>
+    <span>Thoughtful comments</span>
   </div>
 </section>
 
